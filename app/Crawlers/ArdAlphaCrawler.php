@@ -4,15 +4,15 @@ namespace App\Crawlers;
 
 use App\Enums\Channel;
 
-class ArdCrawler extends BaseArdCrawler
+class ArdAlphaCrawler extends BaseArdCrawler
 {
     protected function sender(): int
     {
-        return 28106;
+        return 28487;
     }
 
     protected function channel(): Channel
     {
-        return Channel::ARD();
+        return Channel::ARD_ALPHA();
     }
 }

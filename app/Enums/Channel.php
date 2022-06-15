@@ -2,7 +2,10 @@
 
 namespace App\Enums;
 
+use App\Crawlers\ArdAlphaCrawler;
 use App\Crawlers\ArdCrawler;
+use App\Crawlers\ArdOneCrawler;
+use App\Crawlers\Crawler;
 use App\Data\Tv;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
@@ -16,6 +19,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @method static self ARD()
+ * @method static self ARD_ALPHA()
+ * @method static self ARD_ONE()
  * @method static self ZDF()
  */
 final class Channel extends Enum implements Responsable
@@ -24,6 +29,8 @@ final class Channel extends Enum implements Responsable
     {
         return [
             'ARD' => 'ard.de',
+            'ARD_ALPHA' => 'alpha.br-online.de',
+            'ARD_ONE' => 'one.ard.de',
             'ZDF' => 'zdf.de',
         ];
     }
@@ -32,6 +39,8 @@ final class Channel extends Enum implements Responsable
     {
         return [
             'ARD' => 'Das Erste',
+            'ARD_ALPHA' => 'ARD alpha',
+            'ARD_ONE' => 'one ARD',
             'ZDF' => 'ZDF',
         ];
     }
@@ -40,6 +49,7 @@ final class Channel extends Enum implements Responsable
     {
         return match ($this) {
             self::ARD() => 'de',
+            self::ARD_ALPHA() => 'de',
             self::ZDF() => 'de',
             default => app()->getLocale(),
         };
@@ -49,6 +59,8 @@ final class Channel extends Enum implements Responsable
     {
         return match ($this) {
             self::ARD() => 'https://www.ard.de',
+            self::ARD_ALPHA() => 'https://www.ardalpha.de',
+            self::ARD_ONE() => 'https://one.ard.de',
             self::ZDF() => 'https://www.zdf.de',
             default => null,
         };
@@ -78,10 +90,7 @@ final class Channel extends Enum implements Responsable
 
     public function crawl(): string
     {
-        $crawler = match ($this) {
-            self::ARD() => new ArdCrawler(),
-            default => null,
-        };
+        $crawler = $this->crawler();
 
         $tv = $crawler
             ? $crawler->crawl()
@@ -109,6 +118,16 @@ final class Channel extends Enum implements Responsable
         }
 
         return response()->file($this->disk()->path($this->filename()));
+    }
+
+    private function crawler(): ?Crawler
+    {
+        return match ($this) {
+            self::ARD() => new ArdCrawler(),
+            self::ARD_ALPHA() => new ArdAlphaCrawler(),
+            self::ARD_ONE() => new ArdOneCrawler(),
+            default => null,
+        };
     }
 
     private function filename(): string
