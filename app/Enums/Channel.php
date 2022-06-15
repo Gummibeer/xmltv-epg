@@ -79,7 +79,7 @@ final class Channel extends Enum implements Responsable
         $filename = $this->filename();
         $disk = $this->disk();
 
-        $modifiedAt = $this->modifiedAt();
+        $modifiedAt = $this->lastModifiedAt();
 
         if($modifiedAt === null || !$modifiedAt->isSameDay(now())) {
             $disk->put($filename, $this->crawl());
@@ -120,6 +120,13 @@ final class Channel extends Enum implements Responsable
         return response()->file($this->disk()->path($this->filename()));
     }
 
+    public function lastModifiedAt(): ?CarbonInterface
+    {
+        return $this->disk()->exists($this->filename())
+            ? CarbonImmutable::createFromTimestampUTC($this->disk()->lastModified($this->filename()))
+            : null;
+    }
+
     private function crawler(): ?Crawler
     {
         return match ($this) {
@@ -138,12 +145,5 @@ final class Channel extends Enum implements Responsable
     private function disk(): Filesystem
     {
         return Storage::disk('local');
-    }
-
-    private function modifiedAt(): ?CarbonInterface
-    {
-        return $this->disk()->exists($this->filename())
-            ? CarbonImmutable::createFromTimestampUTC($this->disk()->lastModified($this->filename()))
-            : null;
     }
 }
