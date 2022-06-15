@@ -12,6 +12,7 @@ use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Enum\Laravel\Enum;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @method static self ARD()
@@ -101,6 +102,12 @@ final class Channel extends Enum implements Responsable
 
     public function toResponse($request): Response
     {
+        $this->epg();
+
+        if(!$this->disk()->exists($this->filename())) {
+            throw new NotFoundHttpException();
+        }
+
         return response()->file($this->disk()->path($this->filename()));
     }
 
