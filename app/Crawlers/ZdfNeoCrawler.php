@@ -8,7 +8,7 @@ class ZdfNeoCrawler extends BaseZdfCrawler
 {
     protected function channel(): Channel
     {
-        return Channel::ZDF_INFO();
+        return Channel::ZDF_NEO();
     }
 
     protected function timeline(): string
