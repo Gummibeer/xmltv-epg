@@ -12,14 +12,13 @@ use Illuminate\Http\Client\Pool;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
 use Psr\Http\Message\UriInterface;
 use Symfony\Component\DomCrawler\Crawler as DomCrawler;
-use Symfony\Component\DomCrawler\Link;
+use Symfony\Component\DomCrawler\UriResolver;
 
-abstract class BaseArdCrawler extends Crawler
+abstract class BaseZdfCrawler extends Crawler
 {
-    abstract protected function sender(): int;
+    abstract protected function timeline(): string;
 
     public function crawl(): Tv
     {
@@ -27,21 +26,25 @@ abstract class BaseArdCrawler extends Crawler
             $date = CarbonImmutable::now('Europe/Berlin');
 
             return collect(CarbonPeriod::since($date->subDay()->startOfDay())->days()->until($date->addDays(7)->endOfWeek()))
-                ->map(fn(DateTimeInterface $date) => $pool->accept('text/html')->get('https://programm.ard.de/TV/Programm/Sender', [
-                    'datum' => $date->format('d.m.Y'),
-                    'sender' => $this->sender(),
+                ->map(fn(DateTimeInterface $date) => $pool->accept('text/html')->get('https://www.zdf.de/live-tv', [
+                    'airtimeDate' => $date->format('Y-m-d'),
                 ]))
                 ->all();
         }))
-            ->map(static function(Response $response): array {
+            ->map(function(Response $response): array {
                 $html = $response->body();
 
                 $crawler = new DomCrawler($html, $response->effectiveUri());
 
-                return $crawler->filter('body .event-list li[data-action="Sendung"] a.sendungslink')->links();
+                return collect($crawler->filter("body .timeline-list .timeline-{$this->timeline()} li a")->extract(['data-dialog']))
+                    ->map(fn(string $data): UriInterface => new Uri(UriResolver::resolve(
+                        json_decode($data, true)['contentUrl'],
+                        $response->effectiveUri()
+                    )))
+                    ->all();
             })
             ->collapse()
-            ->map(fn (Link $link): UriInterface => new Uri($link->getUri()))
+            ->reject(fn(UriInterface $uri): bool => trim($uri->getPath(), '/') === 'broadcasts')
             ->values();
 
         $programs = $links
@@ -59,24 +62,15 @@ abstract class BaseArdCrawler extends Crawler
 
                 $crawler = new DomCrawler($html, $response->effectiveUri());
 
-                $main = $crawler->filter('body .event-list li[data-action="Sendung"]')->first();
+                $main = $crawler->filter('section')->first();
 
-                $start = CarbonImmutable::createFromFormat(
-                    'd.m.Y H:i',
-                    (string) Str::of($main->filter('.date')->html())
-                        ->trim()
-                        ->replace('Uhr', '')
-                        ->replace('<', ' <')
-                        ->replace('>', '> ')
-                        ->stripTags()
-                        ->replaceMatches('/\s+/', ' ')
-                        ->trim(),
-                    'Europe/Berlin'
-                );
-
-                $title = $main->filter('.title')->innerText();
-                $description = $main->filter('.eventText')->text();
-                $image = rescue(fn() => (string) new Uri($main->filter('.gallery img')->image()->getUri()), null, false);
+                $start = CarbonImmutable::parse($main->filter('time[datetime]')->attr('datetime'));
+                $title = trim($main->filter('.teaser-title')->text(), "\xC2\xA0");
+                $description = $main->filter('.overlay-text')->text();
+                $image = rescue(fn() => (string) new Uri(UriResolver::resolve(
+                    $main->filter('img.overlay-img[data-src]')->attr('data-src'),
+                    $response->effectiveUri()
+                )), null, false);
 
                 return new Program(
                     title: $title,

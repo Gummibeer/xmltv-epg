@@ -6,6 +6,9 @@ use App\Crawlers\ArdAlphaCrawler;
 use App\Crawlers\ArdCrawler;
 use App\Crawlers\ArdOneCrawler;
 use App\Crawlers\Crawler;
+use App\Crawlers\ZdfCrawler;
+use App\Crawlers\ZdfInfoCrawler;
+use App\Crawlers\ZdfNeoCrawler;
 use App\Data\Tv;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
@@ -22,6 +25,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static self ARD_ALPHA()
  * @method static self ARD_ONE()
  * @method static self ZDF()
+ * @method static self ZDF_INFO()
+ * @method static self ZDF_NEO()
  */
 final class Channel extends Enum implements Responsable
 {
@@ -32,6 +37,8 @@ final class Channel extends Enum implements Responsable
             'ARD_ALPHA' => 'alpha.br-online.de',
             'ARD_ONE' => 'one.ard.de',
             'ZDF' => 'zdf.de',
+            'ZDF_INFO' => 'info.zdf.de',
+            'ZDF_NEO' => 'neo.zdf.de',
         ];
     }
 
@@ -42,6 +49,8 @@ final class Channel extends Enum implements Responsable
             'ARD_ALPHA' => 'ARD alpha',
             'ARD_ONE' => 'one ARD',
             'ZDF' => 'ZDF',
+            'ZDF_INFO' => 'ZDFinfo',
+            'ZDF_NEO' => 'ZDFneo',
         ];
     }
 
@@ -51,6 +60,8 @@ final class Channel extends Enum implements Responsable
             self::ARD() => 'de',
             self::ARD_ALPHA() => 'de',
             self::ZDF() => 'de',
+            self::ZDF_INFO() => 'de',
+            self::ZDF_NEO() => 'de',
             default => app()->getLocale(),
         };
     }
@@ -62,6 +73,8 @@ final class Channel extends Enum implements Responsable
             self::ARD_ALPHA() => 'https://www.ardalpha.de',
             self::ARD_ONE() => 'https://one.ard.de',
             self::ZDF() => 'https://www.zdf.de',
+            self::ZDF_INFO() => 'https://info.zdf.de',
+            self::ZDF_NEO() => 'https://neo.zdf.de',
             default => null,
         };
     }
@@ -133,6 +146,9 @@ final class Channel extends Enum implements Responsable
             self::ARD() => new ArdCrawler(),
             self::ARD_ALPHA() => new ArdAlphaCrawler(),
             self::ARD_ONE() => new ArdOneCrawler(),
+            self::ZDF() => new ZdfCrawler(),
+            self::ZDF_INFO() => new ZdfInfoCrawler(),
+            self::ZDF_NEO() => new ZdfNeoCrawler(),
             default => null,
         };
     }
