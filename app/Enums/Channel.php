@@ -47,7 +47,7 @@ final class Channel extends Enum implements Responsable
         return [
             'ARD' => 'Das Erste',
             'ARD_ALPHA' => 'ARD alpha',
-            'ARD_ONE' => 'one ARD',
+            'ARD_ONE' => 'ARD one',
             'ZDF' => 'ZDF',
             'ZDF_INFO' => 'ZDFinfo',
             'ZDF_NEO' => 'ZDFneo',

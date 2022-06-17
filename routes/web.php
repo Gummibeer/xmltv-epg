@@ -12,4 +12,6 @@ Route::get('/', static function(): Responsable|Response {
 
 Route::get('/{channel}', static function (string $name): Responsable|Response {
     return Channel::from($name);
-})->name('channel');
+})
+    ->whereIn('channel', Channel::toValues())
+    ->name('channel');
