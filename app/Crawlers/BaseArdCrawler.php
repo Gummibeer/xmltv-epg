@@ -75,11 +75,13 @@ abstract class BaseArdCrawler extends Crawler
                 );
 
                 $title = $main->filter('.title')->innerText();
+                $subtitle = $main->filter('.subtitle')->text();
                 $description = $main->filter('.eventText')->text();
                 $image = rescue(fn() => (string) new Uri($main->filter('.gallery img')->image()->getUri()), null, false);
 
                 return new Program(
                     title: $title,
+                    subtitle: $subtitle,
                     description: $description,
                     icon: $image,
                     start: $start,

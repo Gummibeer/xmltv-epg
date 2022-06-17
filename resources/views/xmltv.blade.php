@@ -21,6 +21,10 @@
         >
             <title lang="{{ $tv->channel->locale() }}">{{ $program->title }}</title>
 
+            @if($program->subtitle)
+                <sub-title lang="{{ $tv->channel->locale() }}">{{ $program->subtitle }}</sub-title>
+            @endif
+
             @if($program->description)
                 <desc lang="{{ $tv->channel->locale() }}">{{ $program->description }}</desc>
             @endif

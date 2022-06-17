@@ -66,6 +66,7 @@ abstract class BaseZdfCrawler extends Crawler
 
                 $start = CarbonImmutable::parse($main->filter('time[datetime]')->attr('datetime'));
                 $title = trim($main->filter('.teaser-title')->text(), "\xC2\xA0");
+                $subtitle = rescue(fn() => $main->filter('.overlay-subtitle')->text(), null, false);
                 $description = $main->filter('.overlay-text')->text();
                 $image = rescue(fn() => (string) new Uri(UriResolver::resolve(
                     $main->filter('img.overlay-img[data-src]')->attr('data-src'),
@@ -74,6 +75,7 @@ abstract class BaseZdfCrawler extends Crawler
 
                 return new Program(
                     title: $title,
+                    subtitle: $subtitle,
                     description: $description,
                     icon: $image,
                     start: $start,
