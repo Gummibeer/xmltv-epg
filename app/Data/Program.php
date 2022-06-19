@@ -13,6 +13,8 @@ final class Program
         public ?string          $icon,
         public CarbonInterface  $start,
         public ?CarbonInterface $stop,
+        public ?int             $season,
+        public ?int             $episode,
     )
     {
     }

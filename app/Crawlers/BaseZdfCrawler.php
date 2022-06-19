@@ -12,6 +12,7 @@ use Illuminate\Http\Client\Pool;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use Psr\Http\Message\UriInterface;
 use Symfony\Component\DomCrawler\Crawler as DomCrawler;
 use Symfony\Component\DomCrawler\UriResolver;
@@ -64,6 +65,19 @@ abstract class BaseZdfCrawler extends Crawler
 
                 $main = $crawler->filter('section')->first();
 
+                $link = rescue(fn() => new Uri($main->filter('a.teaser-title-link')->link()->getUri()), null, false);
+
+                $details = rescue(fn() => (new DomCrawler(Http::get($link)->body(), $link))->filter('body .content-box .teaser-cat')->first()->text(), null, false);
+                $season = null;
+                $episode = null;
+
+                if(filled($details)) {
+                    $season = Str::match('/Staffel (\d+), Folge \d+/', $details) ?: null;
+                    if(filled($season)) {
+                        $episode = Str::match('/Staffel \d+, Folge (\d+)/', $details) ?: null;
+                    }
+                }
+
                 $start = CarbonImmutable::parse($main->filter('time[datetime]')->attr('datetime'));
                 $title = trim($main->filter('.teaser-title')->text(), "\xC2\xA0");
                 $subtitle = rescue(fn() => $main->filter('.overlay-subtitle')->text(), null, false);
@@ -80,6 +94,8 @@ abstract class BaseZdfCrawler extends Crawler
                     icon: $image,
                     start: $start,
                     stop: null,
+                    season: $season,
+                    episode: $episode
                 );
             });
 

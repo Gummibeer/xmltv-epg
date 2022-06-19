@@ -86,6 +86,8 @@ abstract class BaseArdCrawler extends Crawler
                     icon: $image,
                     start: $start,
                     stop: null,
+                    season: null,
+                    episode: null,
                 );
             });
 

@@ -37,6 +37,11 @@
                 <icon src="{{ $program->icon }}"/>
             @endif
 
+            @if($program->season && $program->episode)
+                <episode-num system="xmltv_ns">{{ $program->season - 1 }}.{{ $program->episode - 1 }}.0</episode-num>
+                <episode-num system="onscreen">S{{ str_pad($program->season, 2, '0', STR_PAD_LEFT) }}E{{ str_pad($program->episode, 2, '0', STR_PAD_LEFT) }}</episode-num>
+            @endif
+
             {{--
             title+,
             sub-title*,
