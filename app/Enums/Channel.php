@@ -99,6 +99,20 @@ final class Channel extends Enum implements Responsable
         };
     }
 
+    public function stream(): string
+    {
+        return match ($this) {
+            self::ARD() => 'https://mcdn.daserste.de/daserste/de/master_1920p_5128.m3u8',
+            self::ARD_ALPHA() => 'https://mcdn.br.de/br/fs/ard_alpha/hls/de/master_1280p_3328.m3u8',
+            self::ARD_ONE() => 'https://mcdn.one.ard.de/ardone/hls/master-1080p-5128.m3u8',
+            self::ZDF() => 'https://zdf-hls-15.akamaized.net/hls/live/2016498/de/veryhigh/master.m3u8',
+            self::ZDF_INFO() => 'https://zdf-hls-17.akamaized.net/hls/live/2016500/de/veryhigh/master.m3u8',
+            self::ZDF_NEO() => 'https://zdf-hls-16.akamaized.net/hls/live/2016499/de/veryhigh/master.m3u8',
+            self::KIKA() => 'https://kikageohls.akamaized.net/hls/live/2022693/livetvkika_de/master-1080p-5128.m3u8',
+            self::NDR() => 'https://mcdn.ndr.de/ndr/hls/ndr_fs/ndr_hh/master_720.m3u8',
+        };
+    }
+
     public function epg(): string
     {
         $filename = $this->filename();

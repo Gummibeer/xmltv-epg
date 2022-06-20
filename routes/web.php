@@ -10,6 +10,21 @@ Route::get('/', static function(): Responsable|Response {
         ->header('Content-Type', 'text/xml');
 })->name('sitemap');
 
+Route::get('/streams.m3u8', static function(): Responsable|Response {
+    $channels = collect(Channel::cases())
+        ->map(fn(Channel $channel) => <<<TXT
+        #EXTINF:-1,{$channel->label}
+        {$channel->stream()}
+        TXT)
+        ->implode(PHP_EOL);
+
+    return response(<<<TXT
+    #EXTM3U
+    {$channels}
+    TXT)
+        ->header('Content-Type', 'application/x-mpegURL');
+})->name('streams');
+
 Route::get('/{channel}', static function (string $name): Responsable|Response {
     return Channel::from($name);
 })
