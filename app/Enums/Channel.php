@@ -8,6 +8,7 @@ use App\Crawlers\ArdOneCrawler;
 use App\Crawlers\Crawler;
 use App\Crawlers\KikaCrawler;
 use App\Crawlers\NdrCrawler;
+use App\Crawlers\NickelodeonCrawler;
 use App\Crawlers\ZdfCrawler;
 use App\Crawlers\ZdfInfoCrawler;
 use App\Crawlers\ZdfNeoCrawler;
@@ -31,6 +32,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static self ZDF_NEO()
  * @method static self KIKA()
  * @method static self NDR()
+ * @method static self NICKELODEON()
  */
 final class Channel extends Enum implements Responsable
 {
@@ -45,6 +47,7 @@ final class Channel extends Enum implements Responsable
             'ZDF_NEO' => 'neo.zdf.de',
             'KIKA' => 'kika.de',
             'NDR' => 'ndr.de',
+            'NICKELODEON' => 'nick.de',
         ];
     }
 
@@ -59,6 +62,7 @@ final class Channel extends Enum implements Responsable
             'ZDF_NEO' => 'ZDFneo',
             'KIKA' => 'KiKA',
             'NDR' => 'NDR',
+            'NICKELODEON' => 'nickelodeon',
         ];
     }
 
@@ -72,6 +76,7 @@ final class Channel extends Enum implements Responsable
             self::ZDF_NEO() => 'de',
             self::KIKA() => 'de',
             self::NDR() => 'de',
+            self::NICKELODEON() => 'de',
             default => app()->getLocale(),
         };
     }
@@ -87,6 +92,7 @@ final class Channel extends Enum implements Responsable
             self::ZDF_NEO() => 'https://neo.zdf.de',
             self::KIKA() => 'https://kika.de',
             self::NDR() => 'https://ndr.de',
+            self::NICKELODEON() => 'https://nick.de',
             default => null,
         };
     }
@@ -110,6 +116,7 @@ final class Channel extends Enum implements Responsable
             self::ZDF_NEO() => 'https://zdf-hls-16.akamaized.net/hls/live/2016499/de/veryhigh/master.m3u8',
             self::KIKA() => 'https://kikageohls.akamaized.net/hls/live/2022693/livetvkika_de/master-1080p-5128.m3u8',
             self::NDR() => 'https://mcdn.ndr.de/ndr/hls/ndr_fs/ndr_hh/master_720.m3u8',
+            self::NICKELODEON() => 'https://0d26a00dfbb1.airspace-cdn.cbsivideo.com/nick1999/master/master_5000.m3u8',
         };
     }
 
@@ -177,6 +184,7 @@ final class Channel extends Enum implements Responsable
             self::ZDF_NEO() => new ZdfNeoCrawler(),
             self::KIKA() => new KikaCrawler(),
             self::NDR() => new NdrCrawler(),
+            self::NICKELODEON() => new NickelodeonCrawler(),
             default => null,
         };
     }
