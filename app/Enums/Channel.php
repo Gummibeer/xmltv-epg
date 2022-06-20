@@ -7,6 +7,7 @@ use App\Crawlers\ArdCrawler;
 use App\Crawlers\ArdOneCrawler;
 use App\Crawlers\Crawler;
 use App\Crawlers\KikaCrawler;
+use App\Crawlers\NdrCrawler;
 use App\Crawlers\ZdfCrawler;
 use App\Crawlers\ZdfInfoCrawler;
 use App\Crawlers\ZdfNeoCrawler;
@@ -29,6 +30,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static self ZDF_INFO()
  * @method static self ZDF_NEO()
  * @method static self KIKA()
+ * @method static self NDR()
  */
 final class Channel extends Enum implements Responsable
 {
@@ -42,6 +44,7 @@ final class Channel extends Enum implements Responsable
             'ZDF_INFO' => 'info.zdf.de',
             'ZDF_NEO' => 'neo.zdf.de',
             'KIKA' => 'kika.de',
+            'NDR' => 'ndr.de',
         ];
     }
 
@@ -55,6 +58,7 @@ final class Channel extends Enum implements Responsable
             'ZDF_INFO' => 'ZDFinfo',
             'ZDF_NEO' => 'ZDFneo',
             'KIKA' => 'KiKA',
+            'NDR' => 'NDR',
         ];
     }
 
@@ -67,6 +71,7 @@ final class Channel extends Enum implements Responsable
             self::ZDF_INFO() => 'de',
             self::ZDF_NEO() => 'de',
             self::KIKA() => 'de',
+            self::NDR() => 'de',
             default => app()->getLocale(),
         };
     }
@@ -81,6 +86,7 @@ final class Channel extends Enum implements Responsable
             self::ZDF_INFO() => 'https://info.zdf.de',
             self::ZDF_NEO() => 'https://neo.zdf.de',
             self::KIKA() => 'https://kika.de',
+            self::NDR() => 'https://ndr.de',
             default => null,
         };
     }
@@ -156,6 +162,7 @@ final class Channel extends Enum implements Responsable
             self::ZDF_INFO() => new ZdfInfoCrawler(),
             self::ZDF_NEO() => new ZdfNeoCrawler(),
             self::KIKA() => new KikaCrawler(),
+            self::NDR() => new NdrCrawler(),
             default => null,
         };
     }
