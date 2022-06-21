@@ -21,6 +21,24 @@ abstract class BaseArdCrawler extends Crawler
 {
     abstract protected function sender(): int;
 
+    protected function tap(Program $program): Program
+    {
+        if(str_starts_with($program->title, 'Tatort: ')) {
+            $program->subtitle = (string) Str::of($program->title)->after('Tatort: ')->trim();
+            $program->title = 'Tatort';
+        }
+
+        if(str_contains($program->subtitle ?? '', 'Spielfilm') || str_contains($program->subtitle ?? '', 'Fernsehfilm')) {
+            $program->categories[] = 'movie';
+        }
+
+        if(in_array($program->title, ['Tagesschau', 'ZDF-Mittagsmagazin', 'NDR Info'])) {
+            $program->categories[] = 'news';
+        }
+
+        return $program;
+    }
+
     public function crawl(): Tv
     {
         $links = collect(Http::pool(function (Pool $pool): array {
@@ -89,7 +107,8 @@ abstract class BaseArdCrawler extends Crawler
                     season: null,
                     episode: null,
                 );
-            });
+            })
+            ->map(fn(Program $program) => $this->tap($program));
 
         $programs = $programs
             ->sortBy('start')

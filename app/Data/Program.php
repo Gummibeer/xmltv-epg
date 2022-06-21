@@ -15,6 +15,7 @@ final class Program
         public ?CarbonInterface $stop,
         public ?int             $season,
         public ?int             $episode,
+        public array            $categories = [],
     )
     {
     }

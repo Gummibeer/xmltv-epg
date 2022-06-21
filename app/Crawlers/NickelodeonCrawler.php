@@ -20,6 +20,13 @@ class NickelodeonCrawler extends Crawler
         return Channel::NICKELODEON();
     }
 
+    protected function tap(Program $program): Program
+    {
+        $program->categories[] = 'children';
+
+        return $program;
+    }
+
     public function crawl(): Tv
     {
         $programs = collect(Http::pool(function (Pool $pool): array {
@@ -51,6 +58,7 @@ class NickelodeonCrawler extends Crawler
                     });
             })
             ->collapse()
+            ->map(fn(Program $program) => $this->tap($program))
             ->sortBy('start')
             ->values();
 

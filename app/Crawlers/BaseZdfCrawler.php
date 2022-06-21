@@ -21,6 +21,19 @@ abstract class BaseZdfCrawler extends Crawler
 {
     abstract protected function timeline(): string;
 
+    protected function tap(Program $program): Program
+    {
+        if(str_contains($program->subtitle ?? '', 'Spielfilm') || str_contains($program->subtitle ?? '', 'Fernsehfilm')) {
+            $program->categories[] = 'movie';
+        }
+
+        if(in_array($program->title, ['ZDF-Mittagsmagazin', 'heute - in Deutschland', 'heute - in Europa', 'heute Xpress', 'heute', 'Wetter'])) {
+            $program->categories[] = 'news';
+        }
+
+        return $program;
+    }
+
     public function crawl(): Tv
     {
         $links = collect(Http::pool(function (Pool $pool): array {
@@ -97,7 +110,8 @@ abstract class BaseZdfCrawler extends Crawler
                     season: $season,
                     episode: $episode
                 );
-            });
+            })
+            ->map(fn(Program $program) => $this->tap($program));
 
         $programs = $programs
             ->sortBy('start')
