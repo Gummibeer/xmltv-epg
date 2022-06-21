@@ -32,8 +32,12 @@ abstract class BaseArdCrawler extends Crawler
             $program->categories[] = 'movie';
         }
 
-        if(in_array($program->title, ['Tagesschau', 'ZDF-Mittagsmagazin', 'NDR Info'])) {
+        if(in_array($program->title, ['Tagesthemen', 'Tagesschau', 'ZDF-Mittagsmagazin', 'NDR Info'])) {
             $program->categories[] = 'news';
+        }
+
+        if(in_array($program->title, ['Sportschau'])) {
+            $program->categories[] = 'sports';
         }
 
         return $program;
