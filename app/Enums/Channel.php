@@ -40,7 +40,7 @@ final class Channel extends Enum implements Responsable
     {
         return [
             'ARD' => 'ard.de',
-            'ARD_ALPHA' => 'alpha.br-online.de',
+            'ARD_ALPHA' => 'ardalpha.de',
             'ARD_ONE' => 'one.ard.de',
             'ZDF' => 'zdf.de',
             'ZDF_INFO' => 'info.zdf.de',
@@ -100,7 +100,15 @@ final class Channel extends Enum implements Responsable
     public function logo(): ?string
     {
         return match ($this) {
-            self::ARD() => asset('img/ard.png'),
+            self::ARD() => asset('img/ard.de.png'),
+            self::ARD_ALPHA() => asset('img/ardalpha.de.png'),
+            self::ARD_ONE() => asset('img/one.ard.de.png'),
+            self::ZDF() => asset('img/zdf.de.png'),
+            self::ZDF_INFO() => asset('img/info.zdf.de.png'),
+            self::ZDF_NEO() => asset('img/neo.zdf.de.png'),
+            self::KIKA() => asset('img/kika.de.png'),
+            self::NDR() => asset('img/ndr.de.png'),
+            self::NICKELODEON() => asset('img/nick.de.png'),
             default => null,
         };
     }
