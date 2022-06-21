@@ -28,6 +28,12 @@ abstract class BaseArdCrawler extends Crawler
             $program->title = 'Tatort';
         }
 
+        $episode = Str::match('/^.+ (\(\d+\))$/', $program->title);
+        if($episode) {
+            $program->subtitle .= ' ' . $episode;
+            $program->title = preg_replace('/^(.+) \(\d+\)$/', '$1', $program->title);
+        }
+
         if(str_contains($program->subtitle ?? '', 'Spielfilm') || str_contains($program->subtitle ?? '', 'Fernsehfilm')) {
             $program->categories[] = 'movie';
         }
