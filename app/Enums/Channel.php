@@ -197,12 +197,12 @@ final class Channel extends Enum implements Responsable
         };
     }
 
-    private function filename(): string
+    public function filename(): string
     {
         return "{$this->value}.xml";
     }
 
-    private function disk(): Filesystem
+    public function disk(): Filesystem
     {
         return Storage::disk('local');
     }
