@@ -4,6 +4,7 @@ namespace App\Crawlers;
 
 use App\Data\Program;
 use App\Enums\Channel;
+use Illuminate\Support\Str;
 
 class KikaCrawler extends BaseArdCrawler
 {
@@ -17,6 +18,10 @@ class KikaCrawler extends BaseArdCrawler
         $program = parent::tap($program);
 
         $program->categories[] = 'children';
+
+        if($program->subtitle) {
+            $program->subtitle = (string)Str::of($program->subtitle)->replaceLast('| KiKA', '')->trim();
+        }
 
         return $program;
     }
