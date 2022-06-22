@@ -20,6 +20,7 @@ use DOMDocument;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Spatie\Enum\Laravel\Enum;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -213,5 +214,12 @@ final class Channel extends Enum implements Responsable
     public function disk(): Filesystem
     {
         return Storage::disk('local');
+    }
+
+    public static function cases(): array
+    {
+        return collect(parent::cases())
+            ->sortBy(fn(Channel $channel): string => Str::lower($channel->label))
+            ->all();
     }
 }
