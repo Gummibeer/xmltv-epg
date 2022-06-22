@@ -5,7 +5,6 @@ namespace App\Crawlers;
 use App\Data\Program;
 use App\Data\Tv;
 use Carbon\CarbonImmutable;
-use Carbon\CarbonPeriod;
 use DateTimeInterface;
 use GuzzleHttp\Psr7\Uri;
 use Illuminate\Http\Client\Pool;
@@ -37,9 +36,7 @@ abstract class BaseZdfCrawler extends Crawler
     public function crawl(): Tv
     {
         $links = collect(Http::pool(function (Pool $pool): array {
-            $date = CarbonImmutable::now('Europe/Berlin');
-
-            return collect(CarbonPeriod::since($date->subDay()->startOfDay())->days()->until($date->addDays(7)->endOfWeek()))
+            return $this->dates()
                 ->map(fn(DateTimeInterface $date) => $pool->accept('text/html')->get('https://www.zdf.de/live-tv', [
                     'airtimeDate' => $date->format('Y-m-d'),
                 ]))

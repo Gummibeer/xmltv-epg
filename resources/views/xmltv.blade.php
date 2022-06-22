@@ -31,7 +31,7 @@
 
             <date>{{ $program->start->format('Ymd') }}</date>
 
-            @foreach($program->categories as $category)
+            @foreach(collect($program->categories)->unique()->values() as $category)
                 <category>{{ $category }}</category>
             @endforeach
 

@@ -6,7 +6,6 @@ use App\Data\Program;
 use App\Data\Tv;
 use App\Enums\Channel;
 use Carbon\CarbonImmutable;
-use Carbon\CarbonPeriod;
 use DateTimeInterface;
 use Illuminate\Http\Client\Pool;
 use Illuminate\Http\Client\Response;
@@ -30,9 +29,7 @@ class NickelodeonCrawler extends Crawler
     public function crawl(): Tv
     {
         $programs = collect(Http::pool(function (Pool $pool): array {
-            $date = CarbonImmutable::now('Europe/Berlin');
-
-            return collect(CarbonPeriod::since($date->subDay()->startOfDay())->days()->until($date->addDays(7)->endOfWeek()))
+            return $this->dates()
                 ->map(fn(DateTimeInterface $date) => $pool->accept('application/json')->get("https://www.nick.de/api/more/tvschedule/{$date->format('Ymd')}/nickelodeon-deutschland"))
                 ->all();
         }))

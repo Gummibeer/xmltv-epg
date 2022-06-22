@@ -5,7 +5,6 @@ namespace App\Crawlers;
 use App\Data\Program;
 use App\Data\Tv;
 use Carbon\CarbonImmutable;
-use Carbon\CarbonPeriod;
 use DateTimeInterface;
 use GuzzleHttp\Psr7\Uri;
 use Illuminate\Http\Client\Pool;
@@ -38,7 +37,7 @@ abstract class BaseArdCrawler extends Crawler
             $program->categories[] = 'movie';
         }
 
-        if(in_array($program->title, ['Tagesthemen', 'Tagesschau', 'ZDF-Mittagsmagazin', 'NDR Info'])) {
+        if(in_array($program->title, ['Tagesthemen', 'Tagesschau', 'ZDF-Mittagsmagazin', 'NDR Info', 'WDR aktuell'])) {
             $program->categories[] = 'news';
         }
 
@@ -52,9 +51,7 @@ abstract class BaseArdCrawler extends Crawler
     public function crawl(): Tv
     {
         $links = collect(Http::pool(function (Pool $pool): array {
-            $date = CarbonImmutable::now('Europe/Berlin');
-
-            return collect(CarbonPeriod::since($date->subDay()->startOfDay())->days()->until($date->addDays(7)->endOfWeek()))
+            return $this->dates()
                 ->map(fn(DateTimeInterface $date) => $pool->accept('text/html')->get('https://programm.ard.de/TV/Programm/Sender', [
                     'datum' => $date->format('d.m.Y'),
                     'sender' => $this->sender(),

@@ -9,6 +9,7 @@ use App\Crawlers\Crawler;
 use App\Crawlers\KikaCrawler;
 use App\Crawlers\NdrCrawler;
 use App\Crawlers\NickelodeonCrawler;
+use App\Crawlers\WdrCrawler;
 use App\Crawlers\ZdfCrawler;
 use App\Crawlers\ZdfInfoCrawler;
 use App\Crawlers\ZdfNeoCrawler;
@@ -33,6 +34,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static self KIKA()
  * @method static self NDR()
  * @method static self NICKELODEON()
+ * @method static self WDR()
  */
 final class Channel extends Enum implements Responsable
 {
@@ -48,6 +50,7 @@ final class Channel extends Enum implements Responsable
             'KIKA' => 'kika.de',
             'NDR' => 'ndr.de',
             'NICKELODEON' => 'nick.de',
+            'WDR' => 'wdr.de',
         ];
     }
 
@@ -63,6 +66,7 @@ final class Channel extends Enum implements Responsable
             'KIKA' => 'KiKA',
             'NDR' => 'NDR',
             'NICKELODEON' => 'nickelodeon',
+            'WDR' => 'WDR',
         ];
     }
 
@@ -77,6 +81,7 @@ final class Channel extends Enum implements Responsable
             self::KIKA() => 'de',
             self::NDR() => 'de',
             self::NICKELODEON() => 'de',
+            self::WDR() => 'de',
             default => app()->getLocale(),
         };
     }
@@ -93,6 +98,7 @@ final class Channel extends Enum implements Responsable
             self::KIKA() => 'https://kika.de',
             self::NDR() => 'https://ndr.de',
             self::NICKELODEON() => 'https://nick.de',
+            self::WDR() => 'https://wdr.de',
             default => null,
         };
     }
@@ -125,6 +131,7 @@ final class Channel extends Enum implements Responsable
             self::KIKA() => 'https://kikageohls.akamaized.net/hls/live/2022693/livetvkika_de/master-1080p-5128.m3u8',
             self::NDR() => 'https://mcdn.ndr.de/ndr/hls/ndr_fs/ndr_hh/master_720.m3u8',
             self::NICKELODEON() => 'https://0d26a00dfbb1.airspace-cdn.cbsivideo.com/nick1999/master/master_5000.m3u8',
+            self::WDR() => 'https://wdrfs247.akamaized.net/hls/live/681509/wdr_msl4_fs247/master_5128.m3u8',
         };
     }
 
@@ -193,6 +200,7 @@ final class Channel extends Enum implements Responsable
             self::KIKA() => new KikaCrawler(),
             self::NDR() => new NdrCrawler(),
             self::NICKELODEON() => new NickelodeonCrawler(),
+            self::WDR() => new WdrCrawler(),
             default => null,
         };
     }
