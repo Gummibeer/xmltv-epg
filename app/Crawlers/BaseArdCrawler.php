@@ -26,6 +26,11 @@ abstract class BaseArdCrawler extends Crawler
             $program->subtitle = (string) Str::of($program->title)->after('Tatort: ')->trim();
             $program->title = 'Tatort';
         }
+        
+        if(str_starts_with($program->title, 'Polizeiruf 110: ')) {
+            $program->subtitle = (string) Str::of($program->title)->after('Polizeiruf 110: ')->trim();
+            $program->title = 'Polizeiruf 110';
+        }
 
         $episode = Str::match('/^.+ (\(\d+\))$/', $program->title);
         if($episode) {
