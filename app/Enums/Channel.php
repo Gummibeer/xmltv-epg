@@ -116,6 +116,7 @@ final class Channel extends Enum implements Responsable
             self::KIKA() => asset('img/kika.de.png'),
             self::NDR() => asset('img/ndr.de.png'),
             self::NICKELODEON() => asset('img/nick.de.png'),
+            self::WDR() => asset('img/wdr.de.png'),
             default => null,
         };
     }
