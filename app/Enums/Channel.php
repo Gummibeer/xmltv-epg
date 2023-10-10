@@ -129,7 +129,7 @@ final class Channel extends Enum implements Responsable
             self::ZDF() => 'https://zdf-hls-15.akamaized.net/hls/live/2016498/de/veryhigh/master.m3u8',
             self::ZDF_INFO() => 'https://zdf-hls-17.akamaized.net/hls/live/2016500/de/veryhigh/master.m3u8',
             self::ZDF_NEO() => 'https://zdf-hls-16.akamaized.net/hls/live/2016499/de/veryhigh/master.m3u8',
-            self::KIKA() => 'https://kikageohls.akamaized.net/hls/live/2022693/livetvkika_de/master-1080p50-5128.m3u8',
+            self::KIKA() => 'https://kikageohls.akamaized.net/hls/live/2022693/livetvkika_de/master.m3u8',
             self::NDR() => 'https://mcdn.ndr.de/ndr/hls/ndr_fs/ndr_hh/master_720.m3u8',
             self::NICKELODEON() => 'https://0d26a00dfbb1.airspace-cdn.cbsivideo.com/nick1999/master/master_5000.m3u8',
             self::WDR() => 'https://wdrfs247.akamaized.net/hls/live/681509/wdr_msl4_fs247/master_5128.m3u8',
