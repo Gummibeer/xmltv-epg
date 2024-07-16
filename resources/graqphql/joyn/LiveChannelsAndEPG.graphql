@@ -1,0 +1,27 @@
+query LiveChannelsAndEPG {
+    liveStreams(filterLivestreamsTypes: [LINEAR], first: 5000, offset: 0, liveStreamGroupFilter: DEFAULT) {
+        id,
+        brand {
+            title,
+            brandCode,
+            livestream {
+                logo {
+                    url(profile: "nextgen-web-artlogo-183x75")
+                }
+            }
+        },
+        epgEvents {
+            endDate,
+            startDate,
+            program {
+                ... on EpgEntry {
+                    __typename,
+                    title,
+                    image {
+                        url(profile: "nextgen-web-livestill-503x283")
+                    }
+                }
+            }
+        }
+    }
+}

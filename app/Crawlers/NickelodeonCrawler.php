@@ -30,10 +30,10 @@ class NickelodeonCrawler extends Crawler
     {
         $programs = collect(Http::pool(function (Pool $pool): array {
             return $this->dates()
-                ->map(fn(DateTimeInterface $date) => $pool->accept('application/json')->get("https://www.nick.de/api/more/tvschedule/{$date->format('Ymd')}/nickelodeon-deutschland"))
+                ->map(fn (DateTimeInterface $date) => $pool->accept('application/json')->get("https://www.nick.de/api/more/tvschedule/{$date->format('Ymd')}/nickelodeon-deutschland"))
                 ->all();
         }))
-            ->map(static function(Response $response): Collection {
+            ->map(static function (Response $response): Collection {
                 return collect($response->json('tvSchedules'))
                     ->map(static function (array $data): Program {
                         $start = CarbonImmutable::parse($data['airTime'], 'Europe/Berlin');
@@ -55,7 +55,7 @@ class NickelodeonCrawler extends Crawler
                     });
             })
             ->collapse()
-            ->map(fn(Program $program) => $this->tap($program))
+            ->map(fn (Program $program) => $this->tap($program))
             ->sortBy('start')
             ->values();
 

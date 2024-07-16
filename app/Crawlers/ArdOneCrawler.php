@@ -22,8 +22,8 @@ class ArdOneCrawler extends BaseArdCrawler
     {
         $program = parent::tap($program);
 
-        if($program->subtitle) {
-            $program->subtitle = (string)Str::of($program->subtitle)->replaceLast('ONE', '')->trim('| ');
+        if ($program->subtitle) {
+            $program->subtitle = (string) Str::of($program->subtitle)->replaceLast('ONE', '')->trim('| ');
         }
 
         return $program;

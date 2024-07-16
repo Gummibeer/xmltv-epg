@@ -19,8 +19,8 @@ class KikaCrawler extends BaseArdCrawler
 
         $program->categories[] = 'children';
 
-        if($program->subtitle) {
-            $program->subtitle = (string)Str::of($program->subtitle)->replaceLast('| KiKA', '')->trim();
+        if ($program->subtitle) {
+            $program->subtitle = (string) Str::of($program->subtitle)->replaceLast('| KiKA', '')->trim();
         }
 
         return $program;

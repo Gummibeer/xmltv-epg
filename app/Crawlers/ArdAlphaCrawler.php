@@ -22,8 +22,8 @@ class ArdAlphaCrawler extends BaseArdCrawler
     {
         $program = parent::tap($program);
 
-        if($program->subtitle) {
-            $program->subtitle = (string)Str::of($program->subtitle)->replaceLast('ARD alpha', '')->trim('| ');
+        if ($program->subtitle) {
+            $program->subtitle = (string) Str::of($program->subtitle)->replaceLast('ARD alpha', '')->trim('| ');
         }
 
         return $program;

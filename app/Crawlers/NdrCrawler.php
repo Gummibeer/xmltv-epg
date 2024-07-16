@@ -22,8 +22,8 @@ class NdrCrawler extends BaseArdCrawler
     {
         $program = parent::tap($program);
 
-        if($program->subtitle) {
-            $program->subtitle = (string)Str::of($program->subtitle)->replaceLast('NDR Fernsehen', '')->trim('| ');
+        if ($program->subtitle) {
+            $program->subtitle = (string) Str::of($program->subtitle)->replaceLast('NDR Fernsehen', '')->trim('| ');
         }
 
         return $program;

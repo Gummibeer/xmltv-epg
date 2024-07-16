@@ -22,31 +22,31 @@ abstract class BaseArdCrawler extends Crawler
 
     protected function tap(Program $program): Program
     {
-        if(str_starts_with($program->title, 'Tatort: ')) {
+        if (str_starts_with($program->title, 'Tatort: ')) {
             $program->subtitle = (string) Str::of($program->title)->after('Tatort: ')->trim();
             $program->title = 'Tatort';
         }
-        
-        if(str_starts_with($program->title, 'Polizeiruf 110: ')) {
+
+        if (str_starts_with($program->title, 'Polizeiruf 110: ')) {
             $program->subtitle = (string) Str::of($program->title)->after('Polizeiruf 110: ')->trim();
             $program->title = 'Polizeiruf 110';
         }
 
         $episode = Str::match('/^.+ (\(\d+\))$/', $program->title);
-        if($episode) {
-            $program->subtitle .= ' ' . $episode;
+        if ($episode) {
+            $program->subtitle .= ' '.$episode;
             $program->title = preg_replace('/^(.+) \(\d+\)$/', '$1', $program->title);
         }
 
-        if(str_contains($program->subtitle ?? '', 'Spielfilm') || str_contains($program->subtitle ?? '', 'Fernsehfilm')) {
+        if (str_contains($program->subtitle ?? '', 'Spielfilm') || str_contains($program->subtitle ?? '', 'Fernsehfilm')) {
             $program->categories[] = 'movie';
         }
 
-        if(in_array($program->title, ['Tagesthemen', 'Tagesschau', 'ZDF-Mittagsmagazin', 'NDR Info', 'WDR aktuell'])) {
+        if (in_array($program->title, ['Tagesthemen', 'Tagesschau', 'ZDF-Mittagsmagazin', 'NDR Info', 'WDR aktuell'])) {
             $program->categories[] = 'news';
         }
 
-        if(in_array($program->title, ['Sportschau'])) {
+        if (in_array($program->title, ['Sportschau'])) {
             $program->categories[] = 'sports';
         }
 
@@ -57,13 +57,13 @@ abstract class BaseArdCrawler extends Crawler
     {
         $links = collect(Http::pool(function (Pool $pool): array {
             return $this->dates()
-                ->map(fn(DateTimeInterface $date) => $pool->accept('text/html')->get('https://programm.ard.de/TV/Programm/Sender', [
+                ->map(fn (DateTimeInterface $date) => $pool->accept('text/html')->get('https://programm.ard.de/TV/Programm/Sender', [
                     'datum' => $date->format('d.m.Y'),
                     'sender' => $this->sender(),
                 ]))
                 ->all();
         }))
-            ->map(static function(Response $response): array {
+            ->map(static function (Response $response): array {
                 $html = $response->body();
 
                 $crawler = new DomCrawler($html, $response->effectiveUri());
@@ -76,15 +76,15 @@ abstract class BaseArdCrawler extends Crawler
 
         $programs = $links
             ->chunk(10)
-            ->map(static function(Collection $links): array {
+            ->map(static function (Collection $links): array {
                 return Http::pool(static function (Pool $pool) use ($links): array {
                     return $links
-                        ->map(fn(UriInterface $uri) => $pool->accept('text/html')->get($uri))
+                        ->map(fn (UriInterface $uri) => $pool->accept('text/html')->get($uri))
                         ->all();
                 });
             })
             ->collapse()
-            ->map(static function(Response $response): Program {
+            ->map(static function (Response $response): Program {
                 $html = $response->body();
 
                 $crawler = new DomCrawler($html, $response->effectiveUri());
@@ -107,7 +107,7 @@ abstract class BaseArdCrawler extends Crawler
                 $title = $main->filter('.title')->innerText();
                 $subtitle = $main->filter('.subtitle')->text();
                 $description = $main->filter('.eventText')->text();
-                $image = rescue(fn() => (string) new Uri($main->filter('.gallery img')->image()->getUri()), null, false);
+                $image = rescue(fn () => (string) new Uri($main->filter('.gallery img')->image()->getUri()), null, false);
 
                 return new Program(
                     title: $title,
@@ -120,12 +120,12 @@ abstract class BaseArdCrawler extends Crawler
                     episode: null,
                 );
             })
-            ->map(fn(Program $program) => $this->tap($program));
+            ->map(fn (Program $program) => $this->tap($program));
 
         $programs = $programs
             ->sortBy('start')
             ->values()
-            ->map(static function(Program $program) use($programs): Program {
+            ->map(static function (Program $program) use ($programs): Program {
                 if ($program->stop === null) {
                     $next = $programs->after($program);
 
@@ -136,7 +136,7 @@ abstract class BaseArdCrawler extends Crawler
 
                 return $program;
             })
-            ->reject(fn(Program $program) => $program->stop === null)
+            ->reject(fn (Program $program) => $program->stop === null)
             ->values();
 
         return new Tv($this->channel(), $programs);

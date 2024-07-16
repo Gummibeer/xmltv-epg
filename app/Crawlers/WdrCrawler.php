@@ -22,11 +22,11 @@ class WdrCrawler extends BaseArdCrawler
     {
         $program = parent::tap($program);
 
-        if($program->subtitle) {
-            $program->subtitle = (string)Str::of($program->subtitle)->replaceLast('WDR Fernsehen', '')->trim('| ');
+        if ($program->subtitle) {
+            $program->subtitle = (string) Str::of($program->subtitle)->replaceLast('WDR Fernsehen', '')->trim('| ');
         }
 
-        if(in_array($program->title, ['Regionalprogramm', 'Aktuelle Stunde', 'Hier und heute']) || str_starts_with($program->title, 'Lokalzeit')) {
+        if (in_array($program->title, ['Regionalprogramm', 'Aktuelle Stunde', 'Hier und heute']) || str_starts_with($program->title, 'Lokalzeit')) {
             $program->categories[] = 'news';
         }
 

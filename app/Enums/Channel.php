@@ -144,7 +144,7 @@ final class Channel extends Enum implements Responsable
 
         $modifiedAt = $this->lastModifiedAt();
 
-        if($modifiedAt === null || !$modifiedAt->isSameDay(now())) {
+        if ($modifiedAt === null || ! $modifiedAt->isSameDay(now())) {
             $disk->put($filename, $this->crawl());
         }
 
@@ -176,7 +176,7 @@ final class Channel extends Enum implements Responsable
     {
         $this->epg();
 
-        if(!$this->disk()->exists($this->filename())) {
+        if (! $this->disk()->exists($this->filename())) {
             throw new NotFoundHttpException();
         }
 
@@ -220,7 +220,7 @@ final class Channel extends Enum implements Responsable
     public static function cases(): array
     {
         return collect(parent::cases())
-            ->sortBy(fn(Channel $channel): string => Str::lower($channel->label))
+            ->sortBy(fn (Channel $channel): string => Str::lower($channel->label))
             ->all();
     }
 }

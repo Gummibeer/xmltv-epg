@@ -26,6 +26,6 @@ abstract class Crawler
         $date = CarbonImmutable::now('Europe/Berlin');
 
         return collect(CarbonPeriod::since($date->startOfDay())->days()->until($date->addDays(10)->endOfDay()))
-            ->map(fn(CarbonInterface $carbon) => CarbonImmutable::instance($carbon));
+            ->map(fn (CarbonInterface $carbon) => CarbonImmutable::instance($carbon));
     }
 }
