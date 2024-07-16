@@ -38,7 +38,7 @@ class LoadJoynCommand extends Command
                 'channel' => $streams
                     ->map(fn (array $stream) => Element::make([
                         'display-name' => Element::make(data_get($stream, 'brand.title'))->addAttribute('lang', 'de'),
-                        'icon' => Element::make()->addAttribute('src', data_get($stream, 'brand.livestream.logo.url'))->addAttribute('width', 183)->addAttribute('height', 75),
+                        'icon' => Element::make('')->addAttribute('src', data_get($stream, 'brand.livestream.logo.url'))->addAttribute('width', 183)->addAttribute('height', 75),
                     ])->addAttribute('id', data_get($stream, 'id')))
                     ->all(),
                 'programme' => $streams
@@ -50,7 +50,7 @@ class LoadJoynCommand extends Command
                             'title' => Element::make(data_get($event, 'program.title'))->addAttribute('lang', 'de'),
                             'date' => $start->format('Ymd'),
                             'length' => Element::make($start->diffInMinutes($stop))->addAttribute('units', 'minutes'),
-                            'icon' => Element::make()->addAttribute('src', data_get($event, 'program.image.url'))->addAttribute('width', 503)->addAttribute('height', 283),
+                            'icon' => data_get($event, 'program.image.url') ? Element::make('')->addAttribute('src', data_get($event, 'program.image.url'))->addAttribute('width', 503)->addAttribute('height', 283) : null,
                         ])
                             ->addAttribute('channel', data_get($stream, 'id'))
                             ->addAttribute('start', $start->format('YmdHis O'))
